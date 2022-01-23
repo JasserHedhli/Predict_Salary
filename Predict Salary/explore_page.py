@@ -45,7 +45,7 @@ def clean_country(x):
 def load_data():
     df = pd.read_csv("survey_results_public.csv")
     df = df[["Country", "EdLevel", "YearsCodePro",
-             "Employment", "ConvertedCompYearly"]]
+             "Employment", "Age", "ConvertedCompYearly"]]
     df = df.rename({"ConvertedCompYearly": "Salary"}, axis=1)
     df = df[df["Salary"].notnull()]
     df = df.dropna()
@@ -73,7 +73,7 @@ def show_explore_page():
     data = df['Country'].value_counts()
     fig1, ax1 = plt.subplots()
     ax1.pie(data, labels=data.index, autopct="%1.1f%%",
-            shadow=True, startangle=90)
+            shadow=True, startangle=45)
     ax1.axis("equal")
 
     st.write("""### Number of data for different countries  """)
@@ -88,3 +88,7 @@ def show_explore_page():
     data = df.groupby(['YearsCodePro'])[
         'Salary'].mean().sort_values(ascending=True)
     st.line_chart(data)
+
+    st.write("""###  Mean Salary Based On Age """)
+    data = df.groupby(['Age'])['Salary'].mean().sort_values(ascending=True)
+    st.bar_chart(data)
